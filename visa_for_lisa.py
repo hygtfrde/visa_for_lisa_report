@@ -96,6 +96,27 @@ class Visa4Lisa:
         plt.show()
         plt.close()
 
+    def calculate_entropy(self, x):
+        p = pd.Series(x).value_counts() / len(x)
+        entropy = -np.sum(p * np.log2(p))
+        return entropy
+
+    def calculate_conditional_entropy(self, x, y):
+        y_grouped = y.groupby(y)
+        entropy = 0
+        for yi, y_subset in y_grouped:
+            subset_prob = len(y_subset) / len(y)
+            subset_entropy = self.calculate_entropy(x[y == yi])
+            entropy += subset_prob * subset_entropy
+        return entropy
+
+    def theils_u(self, x, y):
+        s_xy = self.calculate_conditional_entropy(x, y)
+        s_x = self.calculate_entropy(x)
+        if s_x == 0:
+            return 1  # No uncertainty in x
+        return (s_x - s_xy) / s_x
+
     def compute_correlation(self, input_df, type_of_data):
         if type_of_data == 'numerical':
             return input_df[self.numerical_columns].corr()
@@ -118,7 +139,10 @@ class Visa4Lisa:
             corr_matrix = pd.DataFrame(index=self.numerical_columns, columns=self.categorical_columns)
             for num_col in self.numerical_columns:
                 for cat_col in self.categorical_columns:
-                    corr_matrix.loc[num_col, cat_col] = pointbiserialr(input_df[cat_col], input_df[num_col])[0]
+                    if input_df[cat_col].nunique() == 2:  # Binary categorical
+                        corr_matrix.loc[num_col, cat_col] = pointbiserialr(input_df[cat_col], input_df[num_col])[0]
+                    else:  # Multi-level categorical
+                        corr_matrix.loc[num_col, cat_col] = self.theils_u(input_df[cat_col], input_df[num_col])
             return corr_matrix.astype(float)
         else:
             raise ValueError("Invalid type_of_data specified")
@@ -362,10 +386,10 @@ def prompt_user_for_input():
 
     age = get_int_input("Age: ", 0)
     experience = get_int_input("Experience (years): ", 0)
-    income = get_float_input("Income (in $1000): ", 0)
-    zip_code = get_int_input("ZIP Code (5 digit code): ", 10000, 99999)
+    income = get_float_input("Income (in $1000s): ", 0)
+    zip_code = get_int_input("ZIP Code (5 digit code 10000 to 99999): ", 10000, 99999)
     family = get_int_input("Family (1 to 4): ", 1, 4)
-    cc_avg = get_float_input("Credit Card Average Spending (in $1000): ", 0)
+    cc_avg = get_float_input("Credit Card Average Spending (in $1000s): ", 0)
     education = get_int_input("Education (1 to 3): ", 1, 3)
     mortgage = get_float_input("Mortgage (in $1000): ", 0)
     securities_account = get_int_input("Securities Account (0 or 1): ", 0, 1)
