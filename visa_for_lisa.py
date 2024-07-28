@@ -1,9 +1,8 @@
 import os
 import pandas as pd
+from pandas.plotting import scatter_matrix
 import numpy as np
 import matplotlib.pyplot as plt
-from pandas.plotting import scatter_matrix
-from scipy.stats import pointbiserialr, chi2_contingency
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, r2_score
@@ -15,6 +14,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
 from imblearn.over_sampling import SMOTE
 from scipy.stats import norm
+from scipy.stats import pointbiserialr, chi2_contingency
 
 
 
@@ -363,7 +363,10 @@ def prompt_user_for_input():
     age = get_int_input("Age: ", 0)
     experience = get_int_input("Experience (years): ", 0)
     income = get_float_input("Income (in $1000): ", 0)
+    zip_code = get_int_input("ZIP Code (5 digit code): ", 10000, 99999)
+    family = get_int_input("Family (1 to 4): ", 1, 4)
     cc_avg = get_float_input("Credit Card Average Spending (in $1000): ", 0)
+    education = get_int_input("Education (1 to 3): ", 1, 3)
     mortgage = get_float_input("Mortgage (in $1000): ", 0)
     securities_account = get_int_input("Securities Account (0 or 1): ", 0, 1)
     cd_account = get_int_input("CD Account (0 or 1): ", 0, 1)
@@ -374,7 +377,10 @@ def prompt_user_for_input():
         'Age': [age],
         'Experience': [experience],
         'Income': [income],
+        'ZIP Code': [zip_code],
+        'Family': [family],
         'CCAvg': [cc_avg],
+        'Education': [education],
         'Mortgage': [mortgage],
         'Securities Account': [securities_account],
         'CD Account': [cd_account],
@@ -410,7 +416,20 @@ def main():
     # ------------------------
     
     # ------------------------ CONSTANTS ------------------------
-    feature_columns = ['Age', 'Experience', 'Income', 'CCAvg', 'Mortgage', 'Securities Account', 'CD Account', 'Online', 'CreditCard']
+    feature_columns = [
+        'Age', 
+        'Experience', 
+        'Income', 
+        'ZIP Code', 
+        'Family', 
+        'CCAvg', 
+        'Education', 
+        'Mortgage', 
+        'Securities Account', 
+        'CD Account', 
+        'Online', 
+        'CreditCard'
+    ]
     target_column = 'Personal Loan'
     BLUE = "\033[94m"
     RESET = "\033[0m"
