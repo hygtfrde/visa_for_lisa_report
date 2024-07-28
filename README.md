@@ -35,6 +35,7 @@ Machine Learning
 Communication
 
 ## Installation
+Set up a VENV first, then
 Use Pip to install dependencies:
 `pip install -r requirements.txt`
 
