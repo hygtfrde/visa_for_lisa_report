@@ -336,31 +336,39 @@ def convert_to_probabilities(predictions, mean_pred, std_pred):
 
         
 def prompt_user_for_input():
-    def get_int_input(prompt):
+    def get_int_input(prompt, min_value=None, max_value=None):
         while True:
             try:
-                return int(input(prompt))
+                value = int(input(prompt))
+                if (min_value is not None and value < min_value) or (max_value is not None and value > max_value):
+                    print(f"Invalid input. Please enter an integer value between {min_value} and {max_value}.")
+                else:
+                    return value
             except ValueError:
                 print("Invalid input. Please enter an integer value.")
 
-    def get_float_input(prompt):
+    def get_float_input(prompt, min_value=None, max_value=None):
         while True:
             try:
-                return float(input(prompt))
+                value = float(input(prompt))
+                if (min_value is not None and value < min_value) or (max_value is not None and value > max_value):
+                    print(f"Invalid input. Please enter a float value between {min_value} and {max_value}.")
+                else:
+                    return value
             except ValueError:
                 print("Invalid input. Please enter a float value.")
 
     print("Please enter the following details:")
 
-    age = get_int_input("Age: ")
-    experience = get_int_input("Experience (years): ")
-    income = get_int_input("Income (in $1000): ")
-    cc_avg = get_float_input("Credit Card Average Spending (in $1000): ")
-    mortgage = get_int_input("Mortgage (in $1000): ")
-    securities_account = get_int_input("Securities Account (0 or 1): ")
-    cd_account = get_int_input("CD Account (0 or 1): ")
-    online = get_int_input("Online (0 or 1): ")
-    credit_card = get_int_input("Credit Card (0 or 1): ")
+    age = get_int_input("Age: ", 0)
+    experience = get_int_input("Experience (years): ", 0)
+    income = get_float_input("Income (in $1000): ", 0)
+    cc_avg = get_float_input("Credit Card Average Spending (in $1000): ", 0)
+    mortgage = get_float_input("Mortgage (in $1000): ", 0)
+    securities_account = get_int_input("Securities Account (0 or 1): ", 0, 1)
+    cd_account = get_int_input("CD Account (0 or 1): ", 0, 1)
+    online = get_int_input("Online (0 or 1): ", 0, 1)
+    credit_card = get_int_input("Credit Card (0 or 1): ", 0, 1)
 
     user_data = pd.DataFrame({
         'Age': [age],
