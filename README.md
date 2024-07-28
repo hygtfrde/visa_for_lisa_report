@@ -35,9 +35,21 @@ Machine Learning
 Communication
 
 ## Installation
-Set up a VENV first, then
-Use Pip to install dependencies:
-`pip install -r requirements.txt`
+Set up a VENV first, for example:
+```
+python3 -m venv myenv
+source myenv/bin/activate
+```
+Or if you're using Conda:
+```
+conda create --name myenv python=3.9
+conda activate myenv
+```
+Then use Pip to install dependencies:
+```
+pip install -r requirements.txt
+```
+If you encounter dependency issues with the modules, refer to the specific versions used in `requirements_v.txt`
 
 ## Usage
 Open the Jupyter Notebook in your environment. Or run the raw Python code with:
